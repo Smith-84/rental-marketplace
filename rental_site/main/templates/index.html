@@ -1,15 +1,4 @@
 {% extends 'base.html' %}
-{% block json_ld %}
-<script type='application/ld+json'>
-    {
-      "@context": "http://www.schema.org",
-      "@type": "WebSite",
-      "name": "Продажа недвижимости хакасии",
-      "alternateName": "Продажа и аренда недвижимости в республики хакасия",
-      "url": "http://0.0.0.0:8000/"
-    }
- </script>
-{% endblock %}
 {% load custom_tags %}
 {% block content %}
 {% load crispy_forms_tags %}
@@ -24,7 +13,7 @@
         <!-- Type -->
         <div class="full_search_box nexio_search lightanic_search hero_search-radius modern">
             <div>
-                    <form method="get" action="{% url 'search_ad' %}" class="row">
+                    <form method="get" action="{% url 'apartment_ads' %}" class="row">
                         {{ search_form.as_p }}
                         <button type="submit" class="btn">Search</button>
                     </form>

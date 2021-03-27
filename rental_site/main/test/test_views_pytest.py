@@ -10,50 +10,29 @@ def test_success_index_view(client):
 
 
 @pytest.mark.django_db
-def test_success_apartment_sell_view(client):
-    url = reverse('apartment_sell')
+def test_success_apartment_list_view(client):
+    url = reverse('apartment_ads')
     response = client.get(url)
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_success_apartment_rent_view(client):
-    url = reverse('apartment_rent')
+def test_success_room_list_view(client):
+    url = reverse('room_ads')
     response = client.get(url)
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_success_room_sell_view(client):
-    url = reverse('room_sell')
+def test_success_garage_list_view(client):
+    url = reverse('garage_ads')
     response = client.get(url)
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_success_room_rent_view(client):
-    url = reverse('room_rent')
-    response = client.get(url)
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
-def test_success_garage_rent_view(client):
-    url = reverse('garage_rent')
-    response = client.get(url)
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
-def test_success_garage_sell_view(client):
-    url = reverse('garage_sell')
-    response = client.get(url)
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
-def test_success_land_plot_sell_view(client):
-    url = reverse('land_plot_sell')
+def test_success_land_plot_list_view(client):
+    url = reverse('land_plot_ads')
     response = client.get(url)
     assert response.status_code == 200
 

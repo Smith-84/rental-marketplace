@@ -14,26 +14,10 @@
             <div class="nav-menus-wrapper" style="transition-property: none;">
                 <ul class="nav-menu">
                     <li class="active"><a href="/">Главная<span class="submenu-indicator"></span></a></li>
-                    <li><a href="#">Квартиры<span class="submenu-indicator"></span></a>
-                        <ul class="nav-dropdown nav-submenu">
-                            <li><a href="{% url 'apartment_sell' %}" target="_blank">Продажа<span class="submenu-indicator"></span></a></li>
-                            <li><a href="{% url 'apartment_rent' %}" target="_blank">Аренда<span class="submenu-indicator"></span></a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">Комнаты<span class="submenu-indicator"></span></a>
-                        <ul class="nav-dropdown nav-submenu">
-                            <li><a href="{% url 'room_sell' %}" target="_blank">Продажа<span class="submenu-indicator"></span></a></li>
-                            <li><a href="{% url 'room_rent' %}" target="_blank">Аренда<span class="submenu-indicator"></span></a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">Гаражы<span class="submenu-indicator"></span></a>
-                        <ul class="nav-dropdown nav-submenu">
-                            <li><a href="{% url 'garage_sell' %}" target="_blank">Продажа<span class="submenu-indicator"></span></a></li>
-                            <li><a href="{% url 'garage_rent' %}" target="_blank">Аренда<span class="submenu-indicator"></span></a></li>
-                        </ul>
-
-                    </li>
-                    <li><a href="{% url 'land_plot_sell' %}" target="_blank">Земельные участки<span class="submenu-indicator"></span></a></li>
+                    <li><a href="{% url 'apartment_ads' %}">Квартиры<span class="submenu-indicator"></span></a></li>
+                    <li><a href="{% url 'room_ads' %}">Комнаты<span class="submenu-indicator"></span></a></li>
+                    <li><a href="{% url 'garage_ads' %}">Гаражы<span class="submenu-indicator"></span></a></li>
+                    <li><a href="{% url 'land_plot_ads' %}" target="_blank">Земельные участки<span class="submenu-indicator"></span></a></li>
                 </ul>
 
                 <ul class="nav-menu nav-menu-social align-to-right">

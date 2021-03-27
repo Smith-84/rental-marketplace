@@ -7,35 +7,29 @@ from django.forms.models import inlineformset_factory
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib import messages
-# from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_GET
-# from django.utils.decorators import method_decorator
+from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User, AnonymousUser
 from .models import Ad, Apartment, Room, Garage, LandPlot, Image, Tag
 from .forms import AdForm, RoomForm, ApartmentForm, GarageForm, LandPlotForm
-from .forms import SubscribersForm, SearchForm, UserForm, ProfileForm
-from django.core.cache import cache
+from .forms import SubscribersForm, SearchApartmentForm, UserForm, ProfileForm
 from django.db.models.query import QuerySet
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from typing import Dict, Any, Union, Type
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+# from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 # Create your views here.
 
 
 class Index(View):
     """Класс-представление основной страницы."""
 
+    template = 'index.html'
     sub_form = SubscribersForm
-    search_form = SearchForm
+    search_form = SearchApartmentForm
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        return render(request, template_name=self.get_template_names(), context={'sub_form': self.sub_form, 'search_form': self.search_form})
-
-    def get_template_names(self):
-        is_mobile = getattr(self.request, 'is_mobile', False)
-        if is_mobile:
-            return ['mobile_index.html']
-        return ['index.html']
+        return render(request, self.template, context={'sub_form': self.sub_form, 'search_form': self.search_form})
 
     def post(self, request: HttpRequest) -> HttpResponse:
         fill_form = self.sub_form(request.POST)
@@ -45,7 +39,7 @@ class Index(View):
         else:
             messages.error(request, f'Ошибка! {fill_form.errors.as_text()} ')
 
-        return render(request, template_name=self.get_template_names(), context={'sub_form': self.sub_form})
+        return render(request, self.template, context={'sub_form': self.sub_form})
 
 
 class AdsListMixin(ListView):
@@ -55,87 +49,55 @@ class AdsListMixin(ListView):
     template_name = 'list_ad.html'
     context_object_name = 'ads'
     realty = None
-    action = None
     paginate_by = 10
 
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['tags'] = Tag.objects.filter(
             ads__content_type=ContentType.objects.get_for_model(self.realty)).distinct()
-        context['realty'] = self.realty._meta.verbose_name_plural
-        if self.action == 'sell':
-            context['action'] = 'Продажа'
-        else:
-            context['action'] = 'Аренда'
         return context
 
     def get_queryset(self) -> 'QuerySet[Ad]':
         data_to_query = {
-            'action': self.action,
             'content_type': ContentType.objects.get_for_model(self.realty)
         }
         tag = self.request.GET.get('tag')
-        custom_tag = self.request.GET.get('custom_tag')
+        action = self.request.GET.get('action')
 
         if tag is not None:
             data_to_query['tag__slug'] = tag
 
-        if custom_tag is not None:
-            data_to_query['custom_tags__contains'] = [custom_tag]
+        if action is not None and action in ['sell', 'rent']:
+            data_to_query['action'] = action
 
         return Ad.objects.filter(**data_to_query)
 
 
-class ApartmentSell(AdsListMixin):
+class ApartmentList(AdsListMixin):
     """Класс-представление списка объявлений квартир для продажы."""
 
     realty = Apartment
-    action = 'sell'
 
 
-class ApartmentRent(AdsListMixin):
-    """Класс-представление списка объявлений квартир для аренды."""
-
-    realty = Apartment
-    action = 'rent'
-
-
-class RoomSell(AdsListMixin):
+class RoomList(AdsListMixin):
     """Класс-представление списка объявлений комнат для продажы."""
 
     realty = Room
-    action = 'sell'
 
 
-class RoomRent(AdsListMixin):
-    """Класс-представление списка объявлений комнат для аренды."""
-
-    realty = Room
-    action = 'rent'
-
-
-class GarageSell(AdsListMixin):
+class GarageList(AdsListMixin):
     """Класс-представление списка объявлений гаражей для продажы."""
 
     realty = Garage
-    action = 'sell'
 
 
-class GarageRent(AdsListMixin):
-    """Класс-представление списка объявлений гаражей для аренды."""
-
-    realty = Garage
-    action = 'rent'
-
-
-class LandPlotSell(AdsListMixin):
+class LandPlotList(AdsListMixin):
     """Класс-представление списка объявлений земельных участков."""
 
     realty = LandPlot
-    action = 'sell'
 
 
-# @method_decorator(cache_page(60 * 5), name='dispatch')
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class AdDetail(DetailView):
     """Класс-представление страницы объявления."""
 
@@ -231,28 +193,28 @@ class AddRealtyAdMixin(LoginRequiredMixin, CreateView):
 
 
 class AddApartment(AddRealtyAdMixin):
-    """Класс-представление страницы добавляния объявления типа квартира."""
+    """Класс-представление страницы добавления объявления типа квартира."""
 
     model = Apartment
     form_class = ApartmentForm
 
 
 class AddRoom(AddRealtyAdMixin):
-    """Класс-представление страницы добавляния объявления типа комнаты."""
+    """Класс-представление страницы добавления объявления типа комнаты."""
 
     model = Room
     form_class = RoomForm
 
 
 class AddLandPlot(AddRealtyAdMixin):
-    """Класс-представление страницы добавляния объявления типа земельный участок."""
+    """Класс-представление страницы добавления объявления типа земельный участок."""
 
     model = LandPlot
     form_class = LandPlotForm
 
 
 class AddGarage(AddRealtyAdMixin):
-    """Класс-представление страницы добавляния объявления типа гараж."""
+    """Класс-представление страницы добавления объявления типа гараж."""
 
     model = Garage
     form_class = GarageForm
@@ -325,20 +287,20 @@ class EditRealtyAd(PermissionRequiredMixin, UpdateView):
         return self.render_to_response(self.get_context_data())
 
 
-class SearchAd(ListView):
-    model = Ad
-    template_name = 'list_ad.html'
-    context_object_name = 'ads'
-    paginate_by = 10
-
-    def get_queryset(self) -> 'QuerySet[Ad]':
-        queryset = self.model.objects.all()
-        search_text = self.request.GET.get('search')
-        if search_text is not None:
-            query = SearchQuery(search_text)
-            vector = SearchVector('description')
-            queryset = self.model.objects.annotate(rank=SearchRank(vector, query)).filter(rank__gte=0.03).order_by('-rank')
-        return queryset
+# class SearchAd(ListView):
+#     model = Ad
+#     template_name = 'list_ad.html'
+#     context_object_name = 'ads'
+#     paginate_by = 10
+#
+#     def get_queryset(self) -> 'QuerySet[Ad]':
+#         queryset = self.model.objects.all()
+#         search_text = self.request.GET.get('search')
+#         if search_text is not None:
+#             query = SearchQuery(search_text)
+#             vector = SearchVector('description')
+#             queryset = self.model.objects.annotate(rank=SearchRank(vector, query)).filter(rank__gte=0.03).order_by('-rank')
+#         return queryset
 
 
 @require_GET

@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
 {% block meta %}
-    <title>{{ action }} {{ realty }} в республике Хакасия</title>
-    <meta name="description" content="{{ action }} {{ realty }}. Объявления в республике Хакасия." />
+    <title>Продажа и аренда {{ realty }} в республике Хакасия</title>
+    <meta name="description" content="Продажа и аренда {{ realty }}. Объявления в республике Хакасия." />
 {% endblock %}
 {% block content %}
 {% include 'components/header.html' %}
@@ -91,11 +91,6 @@
                                         </a>
                                     </h4>
                                     <p>{{ ad.address }}, {{ ad.region }}</p>
-                                    <p>
-                                        {% for custom_tag in ad.custom_tags %}
-                                            <a href="?custom_tag={{ custom_tag }}">{{ custom_tag }}</a>
-                                        {% endfor %}
-                                    </p>
                                 </div>
                                 <div class="listing-footer-wrap property-lists mt-2">
                                     <div class="property-lists flex-1">

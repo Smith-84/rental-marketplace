@@ -13,13 +13,10 @@ ads_dict = {
 
 urlpatterns = [
     path('', views.Index.as_view()),
-    path('sell/apartment/', views.ApartmentSell.as_view(), name='apartment_sell'),
-    path('sell/room/', views.RoomSell.as_view(), name='room_sell'),
-    path('sell/garage/', views.GarageSell.as_view(), name='garage_sell'),
-    path('sell/land_plot/', views.LandPlotSell.as_view(), name='land_plot_sell'),
-    path('rent/apartment/', views.ApartmentRent.as_view(), name='apartment_rent'),
-    path('rent/room/', views.RoomRent.as_view(), name='room_rent'),
-    path('rent/garage/', views.GarageRent.as_view(), name='garage_rent'),
+    path('apartment/', views.ApartmentList.as_view(), name='apartment_ads'),
+    path('room/', views.RoomList.as_view(), name='room_ads'),
+    path('garage/', views.GarageList.as_view(), name='garage_ads'),
+    path('land_plot/', views.LandPlotList.as_view(), name='land_plot_ads'),
     path('ad/<str:slug>/', views.AdDetail.as_view(), name='ad_detail'),
     path('accounts/', include('allauth.urls')),
     path('dashboard/', views.Dashboard.as_view(), name='dashboard'),
@@ -31,7 +28,6 @@ urlpatterns = [
     path('ad/add/land-plot/', views.AddLandPlot.as_view(), name='add_land_plot'),
     path('ad/add/photos/<uuid:pk>/', views.SaveImages.as_view(), name='add_image'),
     path('ad/edit/<uuid:pk>/', views.EditRealtyAd.as_view(), name='edit_ad'),
-    path('search/', views.SearchAd.as_view(), name='search_ad'),
     path('sitemap.xml', sitemap, {'sitemaps': {'rental_site': GenericSitemap(ads_dict, priority=0.6)}},
          name='django.contrib.sitemaps.views.sitemap'),
     path("robots.txt", views.robots_txt)

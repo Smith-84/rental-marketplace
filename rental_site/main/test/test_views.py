@@ -13,32 +13,20 @@ class IndexViewTest(TestCase):
 
 class AdsListViewTest(TestCase):
 
-    def test_success_apartment_sell_view(self):
-        self.response = self.client.get('/sell/apartment/')
+    def test_success_apartment_list_view(self):
+        self.response = self.client.get('/apartment/')
         self.assertEqual(self.response.status_code, 200)
 
-    def test_success_apartment_rent_view(self):
-        self.response = self.client.get('/rent/apartment/')
+    def test_success_room_list_view(self):
+        self.response = self.client.get('/room/')
         self.assertEqual(self.response.status_code, 200)
 
-    def test_success_room_sell_view(self):
-        self.response = self.client.get('/sell/room/')
+    def test_success_garage_list_view(self):
+        self.response = self.client.get('/garage/')
         self.assertEqual(self.response.status_code, 200)
 
-    def test_success_room_rent_view(self):
-        self.response = self.client.get('/rent/room/')
-        self.assertEqual(self.response.status_code, 200)
-
-    def test_success_garage_rent_view(self):
-        self.response = self.client.get('/sell/garage/')
-        self.assertEqual(self.response.status_code, 200)
-
-    def test_success_garage_sell_view(self):
-        self.response = self.client.get('/sell/garage/')
-        self.assertEqual(self.response.status_code, 200)
-
-    def test_success_land_plot_sell_view(self):
-        self.response = self.client.get('/sell/land_plot/')
+    def test_success_land_plot_list_view(self):
+        self.response = self.client.get('/land_plot/')
         self.assertEqual(self.response.status_code, 200)
 
 

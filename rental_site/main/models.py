@@ -1,6 +1,5 @@
 import uuid
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -73,7 +72,6 @@ class Ad(models.Model):
     })
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey(ct_field='content_type', fk_field='object_id')
-    custom_tags = ArrayField(models.CharField(max_length=50, blank=True))
 
     def save(self, *args, **kwargs) -> None:
         self.slug = f"{slugify(self.description)[:30].replace(' ', '-')}-{str(self.uniq_id)}"
@@ -83,7 +81,7 @@ class Ad(models.Model):
         return reverse('ad_detail', kwargs={'slug': self.slug})
 
     def get_full_absolute_url(self) -> str:
-        """Ссылка на объявлении с доменом в адрессе."""
+        """Ссылка на объявлении с доменом в адресе."""
 
         domain = Site.objects.get_current().domain
         return f'http://{domain}{self.get_absolute_url()}'

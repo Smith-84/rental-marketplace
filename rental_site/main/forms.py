@@ -26,7 +26,7 @@ class ProfileForm(forms.ModelForm):
 class AdForm(forms.ModelForm):
     class Meta:
         model = Ad
-        fields = ('region', 'description', 'cost', 'address', 'action', 'custom_tags', )
+        fields = ('region', 'description', 'cost', 'address', 'action', )
 
 
 class ApartmentForm(forms.ModelForm):
@@ -90,8 +90,3 @@ class SearchApartmentForm(forms.Form):
     action.widget.attrs.update({'class': 'form-control', 'id': 'lookingfor'})
     price.widget.attrs.update({'class': 'form-control', 'id': 'price'})
     region.widget.attrs.update({'class': 'form-control', 'id': 'location'})
-
-
-class SearchForm(forms.Form):
-    search = forms.CharField(required=True)
-    search.widget.attrs.update({'class': 'form-control', 'id': 'search'})
